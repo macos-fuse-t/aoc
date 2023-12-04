@@ -8,9 +8,8 @@ import (
 )
 
 func part1(games []Game, limit map[string]int) {
-	i := 1
 	s := 0
-	for _, game := range games {
+	for i, game := range games {
 		for _, o := range game {
 			for k, v := range o {
 				if v > limit[k] {
@@ -18,9 +17,8 @@ func part1(games []Game, limit map[string]int) {
 				}
 			}
 		}
-		s += i
+		s += i + 1
 	next:
-		i++
 	}
 	fmt.Printf("%d\n", s)
 }
@@ -43,7 +41,6 @@ func part2(games []Game) {
 			power *= v
 		}
 		s += power
-
 	}
 	fmt.Printf("%d\n", s)
 }

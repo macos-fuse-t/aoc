@@ -8,62 +8,46 @@ import (
 	"strings"
 )
 
+func countMatches(l string) int {
+	cards := strings.Split(l, ":")
+	cards = strings.Split(cards[1], "|")
+	re := regexp.MustCompile(`\d+`) // numbers
+	matches := re.FindAllString(cards[1], -1)
+
+	d := map[string]struct{}{}
+	for _, m := range matches {
+		d[m] = struct{}{}
+	}
+
+	matches = re.FindAllString(cards[0], -1)
+	n := 0
+	for _, m := range matches {
+		if _, ok := d[m]; ok {
+			n++
+		}
+	}
+	return n
+}
+
 func part1(lines []string) {
 	s := 0
 
 	for _, l := range lines {
-		cards := strings.Split(l, ":")
-		cards = strings.Split(cards[1], "|")
-		re := regexp.MustCompile(`\d+`) // numbers
-		matches := re.FindAllString(cards[1], -1)
-
-		d := map[string]struct{}{}
-		for _, m := range matches {
-			d[m] = struct{}{}
-		}
-
-		matches = re.FindAllString(cards[0], -1)
-		n := 0
-		for _, m := range matches {
-			if _, ok := d[m]; ok {
-				n++
-			}
-		}
+		n := countMatches(l)
 		if n > 0 {
 			s += 1 << (n - 1)
 		}
 	}
-
 	fmt.Printf("%d\n", s)
 }
 
 func part2(lines []string) {
 	s := 0
-
-	cnt := []int{}
-	for range lines {
-		cnt = append(cnt, 1)
-	}
+	cnt := make([]int, len(lines))
 
 	for i, l := range lines {
-		cards := strings.Split(l, ":")
-		cards = strings.Split(cards[1], "|")
-		re := regexp.MustCompile(`\d+`) // numbers
-		matches := re.FindAllString(cards[1], -1)
-
-		d := map[string]struct{}{}
-		for _, m := range matches {
-			d[m] = struct{}{}
-		}
-
-		matches = re.FindAllString(cards[0], -1)
-		n := 0
-		for _, m := range matches {
-			if _, ok := d[m]; ok {
-				n++
-			}
-		}
-
+		cnt[i]++
+		n := countMatches(l)
 		for j := i + 1; j < i+1+n && j < len(lines); j++ {
 			cnt[j] += cnt[i]
 		}
