@@ -46,15 +46,11 @@ func part2(lines []string) {
 	cnt := make([]int, len(lines))
 
 	for i, l := range lines {
-		cnt[i]++
 		n := countMatches(l)
 		for j := i + 1; j < i+1+n && j < len(lines); j++ {
-			cnt[j] += cnt[i]
+			cnt[j] += cnt[i] + 1
 		}
-	}
-
-	for _, n := range cnt {
-		s += n
+		s += cnt[i] + 1
 	}
 	fmt.Printf("%d\n", s)
 }
