@@ -53,6 +53,13 @@ func part1() {
 func part2() {
 	s := uint64(math.MaxUint64)
 
+	allRanges := RangeList{}
+	for i := 0; i < 7; i++ {
+		for _, r := range maps[i] {
+			allRanges.Insert(r.source, r.target, r.len)
+		}
+	}
+
 	for i := 0; i < len(seeds); i += 2 {
 		for seed := seeds[i]; seed < seeds[i]+seeds[i+1]; seed++ {
 			v := seed
@@ -61,6 +68,11 @@ func part2() {
 			}
 			if v < s {
 				s = v
+			}
+
+			index := sort.Search(len(allRanges), func(i int) bool { return allRanges[i].source > seed })
+			if index != len(allRanges) {
+				seed = allRanges[index].source - 1
 			}
 		}
 	}
